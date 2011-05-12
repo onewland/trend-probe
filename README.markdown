@@ -5,8 +5,10 @@ supports opening a browser to the search of the trending topic.
 
 TODO
 -----
-* persist highlights by not overwriting unchanging topics
-* ignore topic (with persistence) with right-click ignore
+* force update feature
+* persist highlight over multiple executions
+* ignore topic (with persistence)
 * load a couple sample tweets from the topic
 * load data from whatthetrend?
 * basic analytics?
+* tests? probably not

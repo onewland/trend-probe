@@ -14,28 +14,46 @@ module TrendProbe
     TREND_NAME_COLUMN = 0
     TREND_SEARCH_URL = 1
     TREND_HIGHLIGHT = 2
+    HIGHLIGHT_COLORS = [nil, 'yellow', 'green']
     def load_trends
       Util.load_trends_json.each do |result|
         if result.length > 1 && result[0] == 'trends'
-          result[1].each do |t|
-            @trends << t
-          end
+          @trends = result[1]
         end
       end
     end
 
     def update_data_store
-      @data_store.clear
+      list_names = {}
+      trend_names = {}
+
+      # Collect a list of currently displayed trends
+      @data_store.each do |model, path, iter|
+        list_names[iter[TREND_NAME_COLUMN]] = 1
+      end
+
+      # Display any new trends
       @trends.each_with_index do |trend, i|
-        iter = @data_store.append
-        @data_store.set_value(iter, TREND_NAME_COLUMN, trend['name'])
-        @data_store.set_value(iter, TREND_SEARCH_URL, trend['url'])
-        @data_store.set_value(iter, TREND_HIGHLIGHT, 0)
+        trend_name = trend['name']
+        unless list_names[trend_name]
+          iter = @data_store.append
+          @data_store.set_value(iter, TREND_NAME_COLUMN, trend_name)
+          @data_store.set_value(iter, TREND_SEARCH_URL, trend['url'])
+          @data_store.set_value(iter, TREND_HIGHLIGHT, 0)
+        end
+        # Collect a list of currently valid trends
+        trend_names[trend_name] = 1
+      end
+
+      # Remove old trends from the displayed list
+      @data_store.each do |model, path, iter|
+        unless trend_names[iter[TREND_NAME_COLUMN]]
+          @data_store.remove(iter)
+        end
       end
     end
 
     def load_trends_and_update_data_store
-      @trends = []
       load_trends
       update_data_store
     end
@@ -67,13 +85,7 @@ module TrendProbe
         'text' => TREND_NAME_COLUMN
       )
       @column.set_cell_data_func(@renderer) do |col, renderer, model, iter|
-        if iter[TREND_HIGHLIGHT] == 1
-          renderer.background = 'yellow'
-        elsif iter[TREND_HIGHLIGHT] == 2
-          renderer.background = 'green'
-        else
-          renderer.background = nil
-        end
+        renderer.background = HIGHLIGHT_COLORS[TREND_HIGHLIGHT]
       end
       @list_view = Gtk::TreeView.new
       @list_view.append_column @column
