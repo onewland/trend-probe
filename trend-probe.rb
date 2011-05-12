@@ -85,7 +85,7 @@ module TrendProbe
         'text' => TREND_NAME_COLUMN
       )
       @column.set_cell_data_func(@renderer) do |col, renderer, model, iter|
-        renderer.background = HIGHLIGHT_COLORS[TREND_HIGHLIGHT]
+        renderer.background = HIGHLIGHT_COLORS[iter[TREND_HIGHLIGHT]]
       end
       @list_view = Gtk::TreeView.new
       @list_view.append_column @column
