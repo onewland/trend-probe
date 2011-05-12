@@ -1,5 +1,5 @@
 A silly GTK+ client for watching Twitter trending topics. Hits
-the server every 5 minutes and overwrites whatever is stored. Supports
+the server every 5 minutes. Supports
 highlighting (cycles through yellow, then green, then clear). Also 
 supports opening a browser to the search of the trending topic.
 
