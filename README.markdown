@@ -5,7 +5,6 @@ supports opening a browser to the search of the trending topic.
 
 TODO
 -----
-* force update feature
 * persist highlight over multiple executions
 * ignore topic (with persistence)
 * load a couple sample tweets from the topic

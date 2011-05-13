@@ -71,11 +71,17 @@ module TrendProbe
       @data_store.set_value(iter, TREND_HIGHLIGHT, hl_value)
     end
 
+    def force_update
+      load_trends_and_update_data_store
+    end
+
     def init_buttons 
-      @open_in_browser = Gtk::Button.new 'Open in browser'
+      @open_in_browser = Gtk::Button.new 'Open in Browser'
       @open_in_browser.signal_connect('clicked') { open_in_browser }
       @highlight = Gtk::Button.new 'Highlight'
       @highlight.signal_connect('clicked') { highlight_callback }
+      @force_update = Gtk::Button.new 'Force Update'
+      @force_update.signal_connect('clicked') { force_update }
     end
 
     def init_list_view
@@ -107,6 +113,7 @@ module TrendProbe
       @main_box.add @list_view
       @main_box.add @open_in_browser
       @main_box.add @highlight
+      @main_box.add @force_update
       self.add @main_box
       self.load_trends_and_update_data_store
       Gtk.timeout_add(5 * 60 * 1000) do
